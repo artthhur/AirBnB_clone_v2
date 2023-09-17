@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}' \
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -115,13 +115,50 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        name_pattern = r'(?P<name>(?:[a-zA-Z_])(?:\w)*)'
+        string_pattern = r'(?P<p_string>"([^"]|\")*")'
+        float_pattern = r'(?P<p_float>[-+]?\d+\.\d+)'
+        int_pattern = r'(?P<p_int>[-+]?\d+)'
+        param_pattern = '{}=({}|{}|{})'.format(
+            name_pattern,
+            string_pattern,
+            float_pattern,
+            int_pattern
+        )
+
+        class_name = ''
+        p_kwargs = {}
+        not_updated_attrs = ['id', 'updated_at', 'created_at', '__class__']
+        class_match = re.match(name_pattern, args)
+        if class_match is not None:  # There is a match
+            class_name = class_match.group('name')
+            params = args[len(class_name):].strip().split()
+            for param in params:
+                param_fullmatch = re.fullmatch(param_pattern, param)
+                if param_fullmatch is not None:
+                    key_name = param_fullmatch.group('name')
+                    str_value = param_fullmatch.group('p_string')
+                    float_value = param_fullmatch.group('p_float')
+                    int_value = param_fullmatch.group('p_int')
+                    if str_value is not None:
+                        p_kwargs[key_name] = str_value[1:-1].replace('_', ' ')
+                    if float_value is not None:
+                        p_kwargs[key_name] = float(float_value)
+                    if int_value is not None:
+                        p_kwargs[key_name] = int(int_value)
+        else:  # no match for className
+            class_name = args
+
+        if not class_name:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+        elif class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+        new_instance = HBNBCommand.classes[class_name]()
+        for k, v in p_kwargs.items():
+            if k not in not_updated_attrs:
+                setattr(new_instance, k, v)
         storage.save()
         print(new_instance.id)
         storage.save()
@@ -319,6 +356,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
