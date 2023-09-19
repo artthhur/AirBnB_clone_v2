@@ -12,10 +12,10 @@ class User(BaseModel, Base):
     """This class defines a user by various attributes
     class Attributes:
         __tablename__: mapping table
-        email: sqlalchemy String column: user's email
-        password: sqlalchemy String column: user's password
-        first_name: sqlalchemy String column: user's firstname
-        last_name: sqlalchemy String column: user's lastname
+        email: sqlalchemy String column: the user's email
+        password: sqlalchemy String column: the user's password
+        first_name: sqlalchemy String column: the user's firstname
+        last_name: sqlalchemy String column: the user's lastname
     """
     __tablename__ = 'users'
 
