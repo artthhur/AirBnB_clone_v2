@@ -10,7 +10,10 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
+from models import storage_type
+from uuid import uuid4
+from datetime import datetime
+import re
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""

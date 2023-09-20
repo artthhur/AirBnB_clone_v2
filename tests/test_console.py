@@ -35,7 +35,7 @@ class TestConsole_create(TestCase):
             clear_output(out)
             HBNBCommand().onecmd('show User {}'.format(user_id))
             output = out.getvalue().strip()
-            self.assertIn("'first_name': 'samas'", output)
+            self.assertIn("'first_name': 'samad'", output)
             self.assertIn("'last_name': 'sama'", output)
             self.assertIn("'email':samad@a.dev'", output)
             self.assertIn("'age': 22", output)
