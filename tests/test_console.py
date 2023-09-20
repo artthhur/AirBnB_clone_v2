@@ -24,7 +24,7 @@ class TestConsole_create(TestCase):
             'Test for FileStorage')
     def test_file_storage_create(self):
         """Test case for create command by
-        using the file storage
+        using file storage
         """
         with patch("sys.stdout", new=StringIO()) as out:
             HBNBCommand().onecmd('create User first_name="samas" \
@@ -93,7 +93,7 @@ class TestConsole_create(TestCase):
     def test_db_storage_show(self):
         """Tests show command by using database storage"""
         with patch('sys.stdout', new=StringIO()) as out:
-            user1 = User(email='samad@test.com', password='hello120')
+            user1 = User(email='samad@test.com', password='samad11')
             c_db = MySQLdb.connect(
                     host=os.getenv('HBNB_MYSQL_HOST'),
                     port=3306,
